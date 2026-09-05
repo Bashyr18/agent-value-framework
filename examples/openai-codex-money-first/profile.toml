@@ -1,0 +1,62 @@
+# OpenAI/Codex money-first reference profile
+# Verified pricing snapshot: 2026-09-05. Update before production decisions.
+
+[profile]
+name = "openai-codex-money-first"
+as_of = "2026-09-05"
+objective = "minimum expected direct spend per accepted production-quality change"
+
+[roles]
+root = "sol_root"
+default_worker = "luna_worker"
+reviewer = "terra_reviewer"
+rescue = "sol_rescue"
+premium_adviser = "astra_adviser"
+
+[models.luna_worker]
+model = "gpt-5.6-luna"
+effort = "max"
+[models.luna_worker.pricing]
+input = 0.20
+cached_input = 0.02
+output = 1.20
+
+[models.luna_scout]
+model = "gpt-5.6-luna"
+effort = "medium"
+[models.luna_scout.pricing]
+input = 0.20
+cached_input = 0.02
+output = 1.20
+
+[models.terra_reviewer]
+model = "gpt-5.6-terra"
+effort = "high"
+[models.terra_reviewer.pricing]
+input = 2.00
+cached_input = 0.20
+output = 12.00
+
+[models.sol_root]
+model = "gpt-5.6-sol"
+effort = "medium"
+[models.sol_root.pricing]
+input = 4.00
+cached_input = 0.40
+output = 20.00
+
+[models.sol_rescue]
+model = "gpt-5.6-sol"
+effort = "high"
+[models.sol_rescue.pricing]
+input = 4.00
+cached_input = 0.40
+output = 20.00
+
+[models.astra_adviser]
+model = "gpt-6-astra"
+effort = "high"
+[models.astra_adviser.pricing]
+input = 10.00
+cached_input = 1.00
+output = 50.00

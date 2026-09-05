@@ -1,0 +1,42 @@
+# Provider-neutral example. Replace every placeholder with a model you can actually use.
+[profile]
+name = "provider-neutral-example"
+as_of = "YYYY-MM-DD"
+
+[roles]
+root = "root"
+default_worker = "worker"
+reviewer = "reviewer"
+premium_adviser = "premium"
+
+[models.root]
+model = "YOUR_BALANCED_REASONING_MODEL"
+effort = "medium"
+[models.root.pricing]
+input = 0.0
+cached_input = 0.0
+output = 0.0
+
+[models.worker]
+model = "YOUR_CHEAP_HIGH_VOLUME_MODEL"
+effort = "high"
+[models.worker.pricing]
+input = 0.0
+cached_input = 0.0
+output = 0.0
+
+[models.reviewer]
+model = "YOUR_INDEPENDENT_REVIEW_MODEL"
+effort = "high"
+[models.reviewer.pricing]
+input = 0.0
+cached_input = 0.0
+output = 0.0
+
+[models.premium]
+model = "YOUR_PREMIUM_MODEL"
+effort = "high"
+[models.premium.pricing]
+input = 0.0
+cached_input = 0.0
+output = 0.0

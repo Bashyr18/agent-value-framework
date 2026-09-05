@@ -1,0 +1,6 @@
+interface:
+  display_name: "AVF Task"
+  short_description: "Cost-aware coding workflow with quality gates and escalation"
+  default_prompt: "Use the repository's Agent Value Framework workflow for this task."
+policy:
+  allow_implicit_invocation: false

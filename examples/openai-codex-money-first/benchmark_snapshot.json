@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-09-05",
+  "source": "Artificial Analysis Coding Agent Index v1.4, Codex harness",
+  "source_url": "https://artificialanalysis.ai/agents/coding-agents/comparisons/codex-vs-muse-code",
+  "warning": "These scores are benchmark measurements, not probabilities that a change in your repository will be accepted.",
+  "rows": [
+    {"configuration": "GPT-6 Astra max", "index": 67, "cost_per_task_usd": 4.72, "time_minutes": 26.8, "tokens_millions": 4.0},
+    {"configuration": "GPT-5.6 Sol max", "index": 65, "cost_per_task_usd": 5.00, "time_minutes": 10.2, "tokens_millions": 13.2},
+    {"configuration": "GPT-5.6 Sol high", "index": 64, "cost_per_task_usd": 3.00, "time_minutes": 6.2, "tokens_millions": 8.0},
+    {"configuration": "GPT-5.6 Sol medium", "index": 62, "cost_per_task_usd": 2.19, "time_minutes": 5.0, "tokens_millions": 5.8},
+    {"configuration": "GPT-5.6 Terra max", "index": 60, "cost_per_task_usd": 1.93, "time_minutes": 8.2, "tokens_millions": 9.6},
+    {"configuration": "GPT-5.6 Terra high", "index": 55, "cost_per_task_usd": 1.14, "time_minutes": 6.0, "tokens_millions": 5.6},
+    {"configuration": "GPT-5.6 Luna max", "index": 57, "cost_per_task_usd": 0.29, "time_minutes": 8.0, "tokens_millions": 16.0},
+    {"configuration": "GPT-5.6 Luna high", "index": 52, "cost_per_task_usd": 0.18, "time_minutes": 5.7, "tokens_millions": 9.6},
+    {"configuration": "GPT-5.6 Luna medium", "index": 42, "cost_per_task_usd": 0.09, "time_minutes": 3.2, "tokens_millions": 4.3}
+  ]
+}

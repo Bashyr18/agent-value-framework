@@ -1,0 +1,42 @@
+[objective]
+metric = "ecac"
+quality_is_constraint = true
+
+[risk]
+green_max = 0.35
+amber_max = 0.65
+
+[risk.weights]
+ambiguity = 0.20
+blast_radius = 0.20
+coupling = 0.15
+domain_criticality = 0.20
+irreversibility = 0.10
+weak_verifiability = 0.15
+
+[parallelism]
+max_default_children = 2
+prefer_read_heavy = true
+allow_nested_workers = false
+
+[routing.green]
+planner = "sol_root"
+worker = "luna_worker"
+review = "deterministic-first"
+
+[routing.amber]
+planner = "sol_root"
+worker = "luna_worker"
+rescue = "sol_rescue"
+review = "conditional-terra"
+
+[routing.red]
+planner = "sol_root"
+pre_mutation_reasoning = "sol_rescue"
+premium_adviser = "astra_adviser"
+worker_after_decision = "cheapest-qualified-worker"
+
+[context]
+state_is_repository_backed = true
+raw_transcript_is_authoritative = false
+rehydrate_after_compaction = true

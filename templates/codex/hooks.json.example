@@ -1,0 +1,17 @@
+{
+  "description": "EXAMPLE ONLY: merge into existing hooks instead of overwriting them.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^compact$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .codex/hooks/session_rehydrate.py",
+            "additionalContextLimit": 500
+          }
+        ]
+      }
+    ]
+  }
+}
