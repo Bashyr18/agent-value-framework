@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Agent Value Framework: Capacity-Aware Control Plane",
+    "subtitle": "Feasibility first · quality floor always",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [1240, 680],
+    "repository": {
+      "url": "https://github.com/Bashyr18/agent-value-framework",
+      "revision": "50b8f2c18781a31c45f01435db5ae34a0043595f"
+    },
+    "views": [
+      {
+        "id": "economic-control",
+        "label": "Economic control",
+        "focus": ["cli", "profile", "capacity", "orchestrator", "worker", "repo", "gates"],
+        "note": "Feasibility and quality constraints come before ECAC comparison."
+      },
+      {
+        "id": "capacity-transition",
+        "label": "Capacity transition",
+        "focus": ["codex", "capacity", "orchestrator", "worker", "state"],
+        "note": "Runtime evidence changes the feasible route without changing project invariants."
+      },
+      {
+        "id": "safe-fallback",
+        "label": "Safe fallback",
+        "focus": ["orchestrator", "worker", "repo", "gates", "reviewer"],
+        "note": "Bounded work can continue; unresolved risk returns to the orchestrator."
+      },
+      {
+        "id": "rehydration-loop",
+        "label": "Rehydration loop",
+        "focus": ["repo", "state", "orchestrator", "skills", "codex"],
+        "note": "Task state and runtime evidence survive compaction and model transitions."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "developer",
+      "type": "external",
+      "label": "Developer / agent",
+      "sublabel": "task objective + acceptance bar",
+      "pos": [32, 300],
+      "size": [170, 72],
+      "sources": [{ "path": "README.md", "label": "entry point" }]
+    },
+    {
+      "id": "capacity",
+      "type": "cloud",
+      "label": "Capacity + entitlement",
+      "sublabel": "runtime evidence · scarce pools",
+      "pos": [32, 90],
+      "size": [200, 72],
+      "tag": "UNKNOWN stays unknown",
+      "sources": [{ "path": "docs/CAPACITY.md", "label": "capacity contract" }]
+    },
+    {
+      "id": "cli",
+      "type": "backend",
+      "label": "AVF CLI",
+      "sublabel": "audit · doctor · economics · risk",
+      "pos": [238, 300],
+      "size": [190, 72],
+      "tag": "python -m / avf",
+      "sources": [{ "path": "src/agent_value_framework/cli.py", "label": "command surface" }]
+    },
+    {
+      "id": "profile",
+      "type": "backend",
+      "label": "Role + price profile",
+      "sublabel": "provider-neutral TOML / dated snapshots",
+      "pos": [270, 90],
+      "size": [210, 72],
+      "sources": [{ "path": "examples/openai-codex-money-first/profile.toml", "label": "reference profile" }]
+    },
+    {
+      "id": "orchestrator",
+      "type": "backend",
+      "label": "Stable orchestrator",
+      "sublabel": "decompose · check · route · escalate",
+      "pos": [470, 285],
+      "size": [220, 88],
+      "tag": "cheapest feasible route",
+      "sources": [{ "path": "docs/ARCHITECTURE.md", "label": "control plane" }]
+    },
+    {
+      "id": "codex",
+      "type": "external",
+      "label": "Codex/provider adapter",
+      "sublabel": "runtime infrastructure · observations",
+      "pos": [540, 90],
+      "size": [190, 72],
+      "sources": [{ "path": "docs/CODEX.md", "label": "adapter boundary" }]
+    },
+    {
+      "id": "skills",
+      "type": "security",
+      "label": "Skill governance",
+      "sublabel": "methodology, never authority",
+      "pos": [790, 90],
+      "size": [190, 72],
+      "sources": [{ "path": "docs/SKILLS.md", "label": "precedence rules" }]
+    },
+    {
+      "id": "repo",
+      "type": "database",
+      "label": "Target repository",
+      "sublabel": "instructions · code · tests · policy",
+      "pos": [780, 300],
+      "size": [200, 80],
+      "tag": "repository truth",
+      "sources": [{ "path": "docs/PRINCIPLES.md", "label": "durable authority" }]
+    },
+    {
+      "id": "gates",
+      "type": "cloud",
+      "label": "Deterministic gates",
+      "sublabel": "tests · compile · accepted",
+      "pos": [1010, 300],
+      "size": [190, 80],
+      "sources": [{ "path": ".github/workflows/ci.yml", "label": "quality gate" }]
+    },
+    {
+      "id": "reviewer",
+      "type": "backend",
+      "label": "Conditional review / rescue",
+      "sublabel": "evidence-based escalation",
+      "pos": [32, 520],
+      "size": [220, 72],
+      "sources": [{ "path": "docs/ARCHITECTURE.md", "label": "review contract" }]
+    },
+    {
+      "id": "worker",
+      "type": "backend",
+      "label": "Bounded worker",
+      "sublabel": "cheapest qualified implementation",
+      "pos": [780, 520],
+      "size": [220, 72],
+      "sources": [{ "path": "templates/common/docs/agents/agent-value-workflow.md", "label": "worker contract" }]
+    },
+    {
+      "id": "state",
+      "type": "database",
+      "label": "Task-state capsule",
+      "sublabel": "rehydrate after compaction",
+      "pos": [1010, 520],
+      "size": [200, 72],
+      "tag": "durable context",
+      "sources": [{ "path": "docs/CONTEXT_COMPACTION.md", "label": "recovery protocol" }]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "AVF routing contract + adapter policy",
+      "wraps": ["cli", "profile", "orchestrator", "codex", "skills"],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "Runtime evidence boundary",
+      "wraps": ["capacity"],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "Project truth + acceptance evidence",
+      "wraps": ["repo", "gates", "state"],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "developer-to-cli",
+      "from": "developer",
+      "to": "cli"
+    },
+    {
+      "id": "cli-to-orchestrator",
+      "from": "cli",
+      "to": "orchestrator"
+    },
+    {
+      "id": "profile-to-orchestrator",
+      "from": "profile",
+      "to": "orchestrator",
+      "label": "role / price intent",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "via": [[375, 190], [720, 190], [720, 329], [690, 329]],
+      "labelAt": [540, 180]
+    },
+    {
+      "id": "codex-to-capacity",
+      "from": "codex",
+      "to": "capacity",
+      "label": "observed capacity",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [[635, 55], [132, 55], [132, 90]],
+      "labelAt": [380, 42],
+      "variant": "dashed"
+    },
+    {
+      "id": "capacity-to-orchestrator",
+      "from": "capacity",
+      "to": "orchestrator",
+      "label": "availability + entitlement",
+      "fromSide": "right",
+      "toSide": "top",
+      "via": [[250, 126], [250, 240], [580, 240], [580, 285]],
+      "labelAt": [375, 230],
+      "variant": "dashed"
+    },
+    {
+      "id": "skills-to-orchestrator",
+      "from": "skills",
+      "to": "orchestrator",
+      "label": "methodology policy",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "via": [[885, 220], [735, 220], [735, 329], [690, 329]],
+      "labelAt": [810, 208],
+      "variant": "dashed"
+    },
+    {
+      "id": "orchestrator-to-worker",
+      "from": "orchestrator",
+      "to": "worker",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "worker-to-repo",
+      "from": "worker",
+      "to": "repo",
+      "label": "implementation",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [1015, 455],
+      "variant": "emphasis"
+    },
+    {
+      "id": "repo-to-gates",
+      "from": "repo",
+      "to": "gates",
+      "label": "validate",
+      "variant": "emphasis",
+      "labelAt": [995, 402]
+    },
+    {
+      "id": "repo-to-state",
+      "from": "repo",
+      "to": "state",
+      "label": "durable task state",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [[880, 430], [1110, 430], [1110, 520]],
+      "labelAt": [990, 420]
+    },
+    {
+      "id": "gates-to-reviewer",
+      "from": "gates",
+      "to": "reviewer",
+      "label": "fail / uncertainty",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "via": [[1235, 340], [1235, 650], [200, 650], [142, 650], [142, 592]],
+      "labelAt": [700, 640],
+      "variant": "dashed"
+    },
+    {
+      "id": "reviewer-to-orchestrator",
+      "from": "reviewer",
+      "to": "orchestrator",
+      "label": "evidence",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "via": [[280, 556], [280, 430], [460, 430], [460, 390], [580, 390], [580, 373]],
+      "labelAt": [365, 460],
+      "variant": "dashed"
+    },
+    {
+      "id": "state-to-orchestrator",
+      "from": "state",
+      "to": "orchestrator",
+      "label": "rehydrate after compaction",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [[1230, 556], [1230, 620], [260, 620], [260, 410], [450, 410], [450, 329], [470, 329]],
+      "labelAt": [800, 610],
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Feasibility",
+      "items": [
+        "Check entitlement, capacity and capabilities first",
+        "Unknown evidence never becomes permission"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Economics",
+      "items": [
+        "Choose the least expensive feasible route",
+        "Reserve scarcity may carry project opportunity cost"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Safety",
+      "items": [
+        "Checkpoint before fallback transitions",
+        "Pause when no route preserves the quality floor"
+      ]
+    }
+  ]
+}

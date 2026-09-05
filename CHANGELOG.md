@@ -8,6 +8,7 @@
 - Capacity opportunity-cost input and a manual capacity snapshot CLI command.
 - Quota-transition checkpointing, reclassification and Codex/Luna Reserve guidance.
 - Capacity-aware architecture documentation and deterministic tests.
+- Trace-enabled interactive architecture walkthrough with four guided views.
 
 ### Changed
 

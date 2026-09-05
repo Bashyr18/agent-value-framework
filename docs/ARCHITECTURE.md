@@ -25,6 +25,8 @@ EXECUTION PLANE (coding-agent runtime)
 
 Changing a model, account, or provider should not require redesigning the control plane.
 
+The [interactive architecture walkthrough](agent-value-framework-architecture.html) makes the same control flow explorable. Its authored source is [agent-value-framework-architecture.json](agent-value-framework-architecture.json).
+
 ## Stable root pattern
 
 The default architecture keeps one capable root model stable through the normal task lifecycle. Other models are bounded children or advisers rather than repeated replacements of the root conversation. Capacity and entitlement are checked before price optimization.

@@ -218,6 +218,8 @@ Inspect a manually supplied capacity snapshot with:
 
 This reports RESERVE plus any intended/effective route mismatch. It does not scrape quota or infer Reserve from a model name.
 
+See the control plane in action in the [interactive architecture walkthrough](docs/agent-value-framework-architecture.html). Use **Guide → Play story** to trace economic control, capacity transitions, safe fallback and rehydration.
+
 Find when an expensive route becomes economically justified:
 
 ```bash
@@ -270,6 +272,7 @@ agent-value-framework/
 ## Documentation map
 
 - [docs/CAPACITY.md](docs/CAPACITY.md) — capacity, feasibility and fallback safety
+- [docs/agent-value-framework-architecture.html](docs/agent-value-framework-architecture.html) — interactive, trace-enabled architecture walkthrough
 - [`docs/PRINCIPLES.md`](docs/PRINCIPLES.md) — non-negotiable design principles
 - [`docs/MATH.md`](docs/MATH.md) — ECAC, break-even and routing math
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — full system architecture
