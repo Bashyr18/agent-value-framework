@@ -23,6 +23,16 @@ This is **Expected Cost per Accepted Change (ECAC)**.
 
 ## 2. Cost decomposition
 
+The front-page formula groups the implementation fields as follows:
+
+- `C_base` — `base_cost`, including planned model work and workers for one attempt;
+- `C_verify` — `verification_cost` for deterministic checks;
+- `C_tools` — expected tool cost;
+- `C_review` — expected reviewer cost;
+- `C_escalation` — expected stronger-model or rescue cost;
+- `C_rework` — expected retry and fix cost;
+- `C_capacity` — `capacity_opportunity_cost`, a project-supplied scarcity term that may be zero.
+
 For one attempt:
 
 ```text

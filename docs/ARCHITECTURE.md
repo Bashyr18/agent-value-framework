@@ -25,7 +25,7 @@ EXECUTION PLANE (coding-agent runtime)
 
 Changing a model, account, or provider should not require redesigning the control plane.
 
-The [interactive architecture walkthrough](agent-value-framework-architecture.html) makes the same control flow explorable. Its authored source is [agent-value-framework-architecture.json](agent-value-framework-architecture.json).
+The [static architecture diagram](agent-value-framework-architecture.html) shows the same control flow. Its authored source is [agent-value-framework-architecture.json](agent-value-framework-architecture.json).
 
 ## Stable root pattern
 

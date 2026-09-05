@@ -1,297 +1,160 @@
-# Agent Value Framework (AVF)
+# Agent Value Framework (AVF) for OpenAI Codex
 
-**Spend less per accepted software change without lowering the quality bar.**
+Cost-aware routing for coding work in OpenAI Codex and OpenAI models.
 
-AVF is an open-source, repository-native framework for cost-aware coding-agent orchestration. It treats model selection as an engineering economics problem rather than a leaderboard problem.
+AVF checks whether a route is allowed and capable, then chooses the lowest expected cost per accepted change.
 
-[![Autoplay walkthrough of the capacity-aware control plane](docs/agent-value-framework-architecture.gif)](docs/agent-value-framework-architecture.html)
+![AVF architecture overview](docs/agent-value-framework-overview.png)
 
-The loop above is a quick tour. Open the [interactive walkthrough](docs/agent-value-framework-architecture.html) for the full trace-enabled diagram and guided views.
+The diagram shows the path from task to accepted change: check capacity, route work, write to the repository, run checks, then review or rescue only when evidence requires it. Open the [full architecture diagram](docs/agent-value-framework-architecture.html) for the source-linked version.
 
-The core objective is:
+## What AVF does
 
-```text
-minimize Expected Cost per Accepted Change (ECAC)
-subject to project-defined quality, safety, and correctness constraints
-```
+- Routes work between an orchestrator, workers, reviewers and rescue paths.
+- Checks entitlement, capacity, capability, policy and the quality bar before price.
+- Measures expected cost per accepted change, not token price alone.
+- Keeps task state recoverable across compaction and model changes.
 
-AVF does **not** mean "always use the cheapest model." It means use the least expensive route that is expected to land a change cleanly, and buy stronger intelligence only where its extra cost is justified by avoided rework, reduced failure probability, or high downstream blast radius.
+The core is provider-neutral. The reference setup and examples are for OpenAI Codex and OpenAI models.
 
-## Why this exists
+## The ECAC formula
 
-Coding-agent spend is often optimized incorrectly:
+[![ECAC formula](docs/ecac-formula.png)](docs/MATH.md)
 
-- teams compare price per million tokens instead of price per accepted change;
-- cheap agents are allowed to make architectural decisions they are poorly suited for;
-- expensive agents are wasted on mechanical work;
-- every task runs the full test suite and multiple reviewers;
-- subagents multiply without a cost model;
-- long contexts compact and lose operational state;
-- user-level config makes the workflow change when an account or machine changes;
-- installed skills silently inject competing instructions.
+**ECAC = expected cost for one attempt ÷ probability the change is accepted.**
 
-AVF separates these concerns:
+| Term | Meaning |
+| --- | --- |
+| `C_base` | Model work for one attempt, including planning and workers. |
+| `C_verify` | Expected cost of tests, lint, compile and other checks. |
+| `C_tools` | Expected cost of tools or hosted services. |
+| `C_review` | Expected reviewer cost when review is used. |
+| `C_escalation` | Expected cost of a stronger model or rescue path. |
+| `C_rework` | Expected retry and fix cost after failure. |
+| `C_capacity` | Project-assigned scarcity cost for using a limited capacity pool; can be zero. |
+| `P(accepted)` | Project evidence for the chance that the change meets its quality bar and is accepted. |
 
-```text
-MODEL        provides intelligence
-SKILL        provides methodology
-ORCHESTRATOR decides routing and escalation
-CAPACITY     represents scarce availability
-ENTITLEMENT  constrains feasible routes
-RUNTIME      supplies observed execution evidence
-REPOSITORY   provides durable state and policy
-TESTS/GATES  provide evidence of correctness
-```
+Use project telemetry for `P(accepted)`. A public benchmark score is not an acceptance probability.
 
-Price is considered only after entitlement, capacity, required capabilities, project policy and the quality floor make a route feasible. Unknown runtime facts stay unknown.
+## Install
 
-## The money-first reference architecture
-
-A provider-specific profile can map roles to any models. The included OpenAI/Codex reference profile (snapshot: 2026-09-05) uses:
-
-```text
-Stable root/orchestrator:  GPT-5.6 Sol / medium
-Default worker:            GPT-5.6 Luna / max
-Optional reviewer:         GPT-5.6 Terra / high
-Local rescue:              GPT-5.6 Sol / high
-Critical technical adviser:GPT-6 Astra / high
-```
-
-This is a **profile**, not the framework. Replace the model names when pricing, capabilities, or your own evals change.
-
-The OpenAI profile also documents Luna Reserve as a provider-specific fallback capacity example. It never stores account entitlement or assumes that an effective Luna model proves Reserve activation.
-
-## The key metric: ECAC
-
-If a route costs $0.30 but only 50% of its changes are accepted without another paid attempt, its stationary approximation is:
-
-```text
-ECAC = $0.30 / 0.50 = $0.60 per accepted change
-```
-
-If a $0.50 route lands 90% cleanly:
-
-```text
-ECAC = $0.50 / 0.90 = $0.556 per accepted change
-```
-
-The more expensive call is the better value.
-
-v0.2 can include a project-assigned scarcity term for finite capacity:
-
-```text
-C_capacity_opportunity = Σ(shadow_price × expected_use)
-ECAC_capacity = (attempt cost + capacity opportunity cost) / P(accepted)
-```
-
-An included allowance can have opportunity cost even when its immediate incremental cash charge is not represented as API billing. Set the shadow price to zero when that is the project's deliberate policy; do not invent provider values.
-
-In production, use observed telemetry:
-
-```text
-Empirical ECAC = total model/tool spend / accepted production-quality changes
-```
-
-See [`docs/MATH.md`](docs/MATH.md) for the full model, break-even equations, escalation economics, and why benchmark scores must never be treated as acceptance probabilities.
-
-## Existing project vs new project
-
-### Existing / mature project
-
-**Do not dump AVF templates into the repository.**
-
-Use:
+Requires Python 3.11+. Runtime dependencies: none.
 
 ```bash
-avf audit . > avf-audit.md
-avf doctor .
-```
-
-Then give your coding agent the repository audit plus [`docs/AGENT_ADOPTION.md`](docs/AGENT_ADOPTION.md). The agent should merge AVF into the project's existing governance, scripts, tests, ADRs, CI, skills, and instruction hierarchy.
-
-AVF's rule for mature repositories is:
-
-> Existing project truth wins. Extend; do not duplicate.
-
-### Greenfield project
-
-Start with the framework contract before the codebase grows. Use the templates in `templates/` and the greenfield guide in [`docs/NEW_PROJECT.md`](docs/NEW_PROJECT.md). Keep the root instructions small; put detailed workflow policy in a dedicated project doc and expose one explicit task skill.
-
-## Pointing an agent at AVF
-
-An agent does not need this repository copied into the target project.
-
-Give it the local path or public URL and say:
-
-```text
-Read docs/AGENT_ADOPTION.md in the Agent Value Framework.
-Treat the target repository as authoritative.
-Run the AVF read-only audit first.
-Produce an integration plan before making changes.
-Do not overwrite existing AGENTS.md, .codex, hooks, CI, skills, scripts,
-or project governance. Adapt AVF to the repository rather than adapting the
-repository to AVF.
-```
-
-The detailed agent contract is in [`docs/AGENT_ADOPTION.md`](docs/AGENT_ADOPTION.md).
-
-## Context compaction is treated as an expected event
-
-AVF does not attempt to eliminate native compaction. It makes compaction non-catastrophic by moving important task state out of conversation history.
-
-A substantial task maintains a small state capsule containing:
-
-```text
-TASK
-CURRENT_OBJECTIVE
-DECISIONS
-NON_NEGOTIABLE_INVARIANTS
-FILES_OWNED
-FILES_CHANGED
-VALIDATION_PASSED
-VALIDATION_FAILED
-ASSUMPTIONS
-UNRESOLVED_RISKS
-LAST_DIFF_FINGERPRINT
-NEXT_CONCRETE_ACTION
-```
-
-After compaction, the agent rehydrates from repository truth: state capsule, Git state, current diff, project instructions, relevant ADRs, and validation evidence.
-
-Codex currently exposes `PreCompact`, `PostCompact`, and `SessionStart` with `source="compact"`; project hooks can use those lifecycle points while keeping injected context intentionally small. See [`docs/CONTEXT_COMPACTION.md`](docs/CONTEXT_COMPACTION.md).
-
-## Skills are governed, not banned
-
-AVF assumes developers may have large skill/plugin ecosystems. Skills are useful, but they are methodology—not authority.
-
-Recommended precedence:
-
-```text
-platform/system safety
-→ explicit user task
-→ repository architecture and acceptance rules
-→ AVF routing contract
-→ task contract
-→ optional skill methodology
-→ model defaults
-```
-
-Broad architecture, migration, provisioning, deployment, or multi-agent skills should usually be explicit/manual. Narrow TDD, exploration, formatting, and accessibility skills can often be safely available to workers.
-
-See [`docs/SKILLS.md`](docs/SKILLS.md).
-
-## Quick start
-
-Requires Python 3.11+ and has no runtime dependencies.
-
-```bash
-git clone <your-fork-or-repo-url>
-cd agent-value-framework
-python -m pip install -e .
+python -m pip install "git+https://github.com/Bashyr18/agent-value-framework.git"
 avf --help
 ```
 
-Audit a repository:
+On Windows, use `py -m pip` if `python` is not available. For local development:
 
 ```bash
-avf audit /path/to/repo
-avf doctor /path/to/repo
+git clone https://github.com/Bashyr18/agent-value-framework.git
+cd agent-value-framework
+python -m pip install -e .
 ```
 
-Score an illustrative task risk profile:
+## First checks
+
+Run these in the repository where Codex will work:
 
 ```bash
-avf risk \
-  --ambiguity 0.2 \
-  --blast-radius 0.3 \
-  --coupling 0.2 \
-  --domain-criticality 0.1 \
-  --irreversibility 0.1 \
-  --weak-verifiability 0.2
+avf audit .
+avf doctor .
 ```
 
-Calculate expected cost per accepted change:
+`audit` is read-only. `doctor` checks prerequisites for an AVF/Codex integration.
+
+## OpenAI Codex setup
+
+Codex is the execution runtime. AVF supplies routing rules and checks; it does not call the OpenAI API, change Codex settings or read private quota.
+
+The dated example profile in [`examples/openai-codex-money-first/`](examples/openai-codex-money-first/) uses:
+
+```text
+root      GPT-5.6 Sol
+worker    GPT-5.6 Luna
+review    GPT-5.6 Terra
+rescue    GPT-5.6 Sol
+adviser   GPT-6 Astra
+```
+
+These are example roles, not permanent AVF defaults. Read [`docs/CODEX.md`](docs/CODEX.md) before adding project-local Codex configuration.
+
+### Luna Reserve
+
+Reserve is a runtime fallback, not proof that a model is available.
+
+1. Confirm regular capacity is unavailable and Reserve is explicitly confirmed.
+2. Save a checkpoint and reclassify the remaining work.
+3. Continue only if the fallback preserves the quality bar; pause unsafe work.
+
+Never infer Reserve from an effective `gpt-5.6-luna` model name. See the [OpenAI Luna Reserve guidance](https://help.openai.com/en/articles/20001499-luna-reserve-in-codex-and-chatgpt-work) and [`docs/CAPACITY.md`](docs/CAPACITY.md).
+
+## Common commands
+
+Calculate ECAC:
 
 ```bash
 avf ecac --base-cost 0.30 --verification-cost 0.05 --accept-prob 0.75
 ```
 
-Inspect a manually supplied capacity snapshot with:
-
-    avf capacity --regular exhausted --reserve available --intended-model gpt-5.6-sol --effective-model gpt-5.6-luna
-
-This reports RESERVE plus any intended/effective route mismatch. It does not scrape quota or infer Reserve from a model name.
-
-See the control plane in action in the [interactive architecture walkthrough](docs/agent-value-framework-architecture.html). Use **Guide → Play story** to trace economic control, capacity transitions, safe fallback and rehydration.
-
-Find when an expensive route becomes economically justified:
+Add project-assigned scarcity cost:
 
 ```bash
-avf break-even \
-  --cheap-cost 0.30 \
-  --premium-cost 1.20 \
-  --cheap-fail 0.18 \
-  --premium-fail 0.05
+avf ecac --base-cost 0.30 --accept-prob 0.75 --capacity-opportunity-cost 0.10
 ```
 
-Estimate token cost using the included OpenAI snapshot:
+Check capacity evidence:
 
 ```bash
-avf token-cost \
-  --profile examples/openai-codex-money-first/profile.toml \
-  --model luna_worker \
-  --input 500000 \
-  --output 100000
+avf capacity --regular available --reserve unknown
 ```
 
-## What AVF deliberately does not do
+Score task risk:
 
-AVF does not:
+```bash
+avf risk --ambiguity 0.2 --blast-radius 0.3 --coupling 0.2
+```
 
-- pretend public benchmark scores are your project's acceptance probabilities;
-- replace project tests with model review;
-- claim a model is safe for a domain merely because it scores well on coding benchmarks;
-- bypass account, organization, sandbox, model-entitlement, or security policy;
-- depend on one permanent model generation;
-- parse private chain-of-thought;
-- make native compaction a source of truth;
-- treat unknown entitlement or capacity as available;
-- lower the quality floor because a fallback route remains;
-- claim that an effective model change proves a particular reserve mode;
-- auto-deploy or perform external writes simply because an agent can;
-- overwrite mature repository governance during installation.
+See the [CLI reference](docs/CAPACITY.md) and [math model](docs/MATH.md) for the remaining commands.
 
-## Project structure
+## Routing rule
 
 ```text
-agent-value-framework/
-├── src/agent_value_framework/  # dependency-free CLI and math
-├── docs/                       # framework specification
-├── templates/                  # provider-neutral + Codex templates
-├── examples/                   # versioned reference profiles
-├── tests/                      # deterministic unit tests
-└── .github/workflows/          # framework CI
+1. Is the route entitled, available and capable?
+2. Does it meet the project's quality bar?
+3. Among feasible routes, which has the lowest ECAC?
+4. If capacity changes, checkpoint and reclassify.
 ```
 
-## Documentation map
+Unknown runtime facts never become permission. A fallback never lowers the quality bar.
 
-- [docs/CAPACITY.md](docs/CAPACITY.md) — capacity, feasibility and fallback safety
-- [docs/agent-value-framework-architecture.html](docs/agent-value-framework-architecture.html) — interactive, trace-enabled architecture walkthrough
-- [`docs/PRINCIPLES.md`](docs/PRINCIPLES.md) — non-negotiable design principles
-- [`docs/MATH.md`](docs/MATH.md) — ECAC, break-even and routing math
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — full system architecture
-- [`docs/EXISTING_PROJECT.md`](docs/EXISTING_PROJECT.md) — mature repository integration
-- [`docs/NEW_PROJECT.md`](docs/NEW_PROJECT.md) — greenfield setup
-- [`docs/AGENT_ADOPTION.md`](docs/AGENT_ADOPTION.md) — point another coding agent at AVF
-- [`docs/CODEX.md`](docs/CODEX.md) — current Codex adapter details
-- [`docs/CONTEXT_COMPACTION.md`](docs/CONTEXT_COMPACTION.md) — state recovery
-- [`docs/SKILLS.md`](docs/SKILLS.md) — skills/plugins governance
-- [`docs/EVALUATION.md`](docs/EVALUATION.md) — project-specific evals and telemetry
-- [`docs/SOURCES.md`](docs/SOURCES.md) — sources and date-sensitive facts
+## Add AVF to a project
+
+Do not overwrite the target project's instructions, hooks, CI, skills or settings.
+
+```bash
+avf audit /path/to/target-repository
+```
+
+Give the audit to your coding agent and follow [`docs/AGENT_ADOPTION.md`](docs/AGENT_ADOPTION.md). For a new project, start with [`docs/NEW_PROJECT.md`](docs/NEW_PROJECT.md).
+
+## Documentation
+
+- [Capacity and fallback](docs/CAPACITY.md)
+- [ECAC and routing math](docs/MATH.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Codex integration](docs/CODEX.md)
+- [Context recovery](docs/CONTEXT_COMPACTION.md)
+- [OpenAI/Codex profile](examples/openai-codex-money-first/)
+
+## Boundaries
+
+AVF does not scrape quotas, read private chain-of-thought, replace tests with model judgment, turn benchmarks into acceptance probabilities, lower the quality bar or deploy changes automatically.
 
 ## Status
 
-`0.2.0` is prepared as an unreleased capacity-aware update: generic capacity states, route feasibility, fallback safety, opportunity-cost economics, transition guidance and a Codex/Luna Reserve adapter note are present. Provider adapters still require validation against the installed runtime before activation.
+`0.2.0` is on `main` as an unreleased capacity-aware update. The v0.1.0 tag and release remain intact.
 
 ## License
 

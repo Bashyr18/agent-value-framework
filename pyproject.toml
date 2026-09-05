@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "agent-value-framework"
 version = "0.2.0"
-description = "Cost-aware orchestration framework for coding agents: minimize expected spend per accepted change without weakening quality."
+description = "Cost-aware routing framework for OpenAI Codex and coding agents: minimize spend per accepted change without weakening quality."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -19,6 +19,10 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Topic :: Software Development :: Quality Assurance",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Bashyr18/agent-value-framework"
+Repository = "https://github.com/Bashyr18/agent-value-framework"
 
 [project.scripts]
 avf = "agent_value_framework.cli:main"
