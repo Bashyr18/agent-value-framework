@@ -13,6 +13,20 @@ reviewer = "terra_reviewer"
 rescue = "sol_rescue"
 premium_adviser = "astra_adviser"
 
+[capacity_policy]
+unknown_entitlement = "conservative"
+checkpoint_on_fallback = true
+silent_model_downgrade = false
+
+[capacity_policy.reserve]
+mode = "fallback"
+model_role = "luna_worker"
+entitlement = "runtime-supplied"
+availability = "runtime-supplied"
+safe_policy = "allow"
+conditional_policy = "reclassify"
+prohibited_policy = "pause"
+
 [models.luna_worker]
 model = "gpt-5.6-luna"
 effort = "max"

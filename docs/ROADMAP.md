@@ -10,14 +10,20 @@
 - skills governance
 - OpenAI dated reference profile
 
-## 0.2 — telemetry
+## 0.2 — capacity-aware routing
+
+- provider-neutral availability, entitlement and capability states
+- route feasibility before economic comparison
+- scarce-capacity opportunity cost
+- reserve/fallback safety classification and quota transition protocol
+- Luna Reserve Codex reference guidance
+
+## 0.3 — evidence and adapters
 
 - JSONL task telemetry helper
 - route-level empirical ECAC reports
 - acceptance/retry/escalation dashboards
 - project task-class baselines
-
-## 0.3 — adapters
 
 - formal adapter contract
 - additional coding-agent hosts

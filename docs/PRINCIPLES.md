@@ -14,3 +14,7 @@
 12. **Compaction is expected.** Design rehydration rather than hoping long conversational history remains intact.
 13. **Mature repositories are authoritative.** AVF integrates with existing governance instead of installing a competing engineering system.
 14. **No false certainty.** Public benchmarks are priors. Project telemetry decides long-run routing.
+15. **Capacity is an engineering resource.** Entitlement, availability and capability are route constraints, not after-the-fact surprises.
+16. **Unknown stays unknown.** Missing quota or entitlement evidence must not become an optimistic boolean.
+17. **Scarce included capacity can have opportunity cost.** A zero incremental cash charge does not require a zero project shadow price.
+18. **Fallback does not inherit sovereignty.** Restricted-capacity workers execute bounded contracts; they do not silently reopen architecture or lower the quality floor.

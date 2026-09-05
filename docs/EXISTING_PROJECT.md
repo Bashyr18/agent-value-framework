@@ -38,6 +38,7 @@ EXISTING SYSTEMS TO REUSE
 MODEL ROUTING
 RISK OVERRIDES
 QUALITY COMMANDS
+CAPACITY AND ENTITLEMENT POLICY
 SKILL POLICY
 STATE LOCATION
 ACCOUNT PORTABILITY GAPS
@@ -75,6 +76,8 @@ Before accepting the framework change:
 - spawn a harmless read-only worker and observe the effective model where supported;
 - test compaction rehydration on a disposable branch/session;
 - do not bundle unrelated application changes into the framework commit.
+
+Capacity transitions use the existing issue/state/evidence system where possible. Record intended/effective route, capacity mode, known or unknown reason and fallback safety; do not store account tokens, private quota screens or inferred percentages.
 
 ## Dirty worktrees
 

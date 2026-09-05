@@ -2,6 +2,17 @@
 metric = "ecac"
 quality_is_constraint = true
 
+[capacity]
+unknown_is_feasible = false
+checkpoint_on_transition = true
+quality_floor_is_hard = true
+shadow_price_default = 0.0
+
+[capacity.reserve]
+safe_policy = "allow"
+conditional_policy = "reclassify"
+prohibited_policy = "pause"
+
 [risk]
 green_max = 0.35
 amber_max = 0.65

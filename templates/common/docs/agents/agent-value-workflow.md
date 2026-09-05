@@ -7,8 +7,9 @@ Minimize expected direct spend per accepted production-quality change. Quality a
 ## Default flow
 
 ```text
-root understands task → classify risk → bounded cheap worker → deterministic gates
-→ conditional review/rescue/premium advice only when justified → root integrates
+root understands task → classify risk → check entitlement/capacity/capabilities
+→ bounded worker → deterministic gates → conditional review/rescue only when justified
+→ root integrates
 ```
 
 ## Durable state
@@ -18,6 +19,8 @@ Conversation history is not authoritative. For substantial work, keep a compact 
 ## Worker contract
 
 Workers receive objective, ownership, interfaces, decisions, invariants, acceptance criteria, required validation and escalation conditions. Workers do not silently redesign architecture or cross a project-defined high-risk boundary.
+
+If regular capacity is constrained, checkpoint first. Safe bounded work may continue; conditional work requires reclassification and a complete contract; prohibited high-risk work pauses. An effective model mismatch is evidence to reconcile, not proof of a particular provider fallback.
 
 ## Skills
 

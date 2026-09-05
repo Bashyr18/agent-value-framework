@@ -4,6 +4,8 @@
 
 A skill can change search breadth, reasoning workflow, tool use, subagent spawning, mutation scope, review behavior, and context load. Therefore skill governance is part of cost governance.
 
+Capacity and entitlement policy remain orchestrator/repository authority. A skill may supply methodology, but cannot make an unavailable route feasible, lower the quality floor or authorize prohibited fallback work.
+
 ## Classification
 
 ### GREEN

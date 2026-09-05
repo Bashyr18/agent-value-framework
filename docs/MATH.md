@@ -33,6 +33,7 @@ C_attempt = C_plan
           + C_review
           + C_escalation
           + C_rework
+          + C_capacity_opportunity
 ```
 
 Token spend is only one component:
@@ -80,7 +81,26 @@ E[C] = Croot
 
 This is why "Astra costs $X" or "Luna costs $Y" is not enough. The important quantities are how frequently each conditional branch executes and how many failures it prevents.
 
-## 5. Upgrade break-even
+## 5. Capacity opportunity cost
+
+v0.2 adds an optional, project-supplied scarcity term:
+
+```text
+C_capacity_opportunity = Σ(λ_k × u_k)
+```
+
+`λ_k` is the project or user's shadow price for one unit of scarce pool `k`; `u_k` is expected consumption. It may be zero. AVF does not invent a provider or Reserve dollar value.
+
+The implementation keeps the v0.1 additive cost model:
+
+```text
+C_attempt_v0.2 = C_attempt_v0.1 + C_capacity_opportunity
+ECAC_capacity = C_attempt_v0.2 / P(Accepted)
+```
+
+This is an economic planning term, not a claim that benchmark scores are acceptance probabilities. When capacity data is unknown, record it as unknown and avoid fabricated units.
+
+## 6. Upgrade break-even
 
 Suppose route `c` is cheap and route `p` is premium.
 
@@ -108,7 +128,7 @@ AVF exposes this as:
 avf break-even --cheap-cost ... --premium-cost ... --cheap-fail ... --premium-fail ...
 ```
 
-## 6. Decomposition as economic compression
+## 7. Decomposition as economic compression
 
 Let `D(t)` represent task difficulty and `I(m)` the effective capability of a model under a given effort level. A worker fails more often as the gap `D-I` grows.
 
@@ -122,7 +142,7 @@ The worker does not need to equal the orchestrator's intelligence because it is 
 
 This is the core reason cheap-worker architectures can preserve quality.
 
-## 7. Risk-adjusted routing
+## 8. Risk-adjusted routing
 
 AVF provides an illustrative risk score based on normalized signals:
 
@@ -143,7 +163,7 @@ The default weights are **policy defaults, not scientific constants**. Tune them
 
 Hard project rules should override numeric scoring. Example: "schema migrations are always RED" is better than hoping a weighted score captures it.
 
-## 8. Deterministic verifiability changes optimal routing
+## 9. Deterministic verifiability changes optimal routing
 
 A cheap worker becomes more attractive when a fast deterministic check catches its common failure modes.
 
@@ -158,7 +178,7 @@ then a cheap worker plus a deterministic gate can dominate a stronger worker eco
 
 Conversely, if correctness is difficult to observe (security boundary, distributed concurrency, subtle public contract), model review or stronger reasoning becomes more valuable.
 
-## 9. Why benchmark scores are not acceptance probabilities
+## 10. Why benchmark scores are not acceptance probabilities
 
 A coding benchmark score is measured on a particular harness and task distribution. It is not `P(accept)` for your repository.
 
@@ -180,7 +200,7 @@ Use benchmark results only as **priors for initial routing**. Then collect your 
 - accepted/rejected changes;
 - revert/incident rate.
 
-## 10. Practical telemetry table
+## 11. Practical telemetry table
 
 For each task record:
 

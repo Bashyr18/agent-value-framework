@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import argparse
 import json
+from math import isfinite
 from pathlib import Path
 
 from .audit import audit_repository
+from .capacity import AvailabilityState, CapacitySnapshot
 from .config import load_models
 from .doctor import doctor
 from .math import AttemptEconomics, empirical_ecac, upgrade_break_even_loss
@@ -14,6 +16,26 @@ from .risk import RiskSignals, recommend_path, risk_band, risk_score
 def _print_checks(checks) -> None:
     for c in checks:
         print(f"[{c.status.upper():4}] {c.name}: {c.detail}")
+
+
+def _nonnegative_float(value: str) -> float:
+    try:
+        parsed = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be a number") from exc
+    if not isfinite(parsed) or parsed < 0:
+        raise argparse.ArgumentTypeError("must be finite and non-negative")
+    return parsed
+
+
+def _normalized_fraction(value: str) -> float:
+    try:
+        parsed = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be a number in [0, 1]") from exc
+    if not isfinite(parsed) or not 0 <= parsed <= 1:
+        raise argparse.ArgumentTypeError("must be in [0, 1]")
+    return parsed
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -39,7 +61,17 @@ def build_parser() -> argparse.ArgumentParser:
     e.add_argument("--review-cost", type=float, default=0.0)
     e.add_argument("--escalation-cost", type=float, default=0.0)
     e.add_argument("--rework-cost", type=float, default=0.0)
+    e.add_argument("--capacity-opportunity-cost", type=_nonnegative_float, default=0.0, help="project-supplied scarcity cost per attempt")
     e.add_argument("--accept-prob", type=float, required=True)
+
+    c = sub.add_parser("capacity", help="Inspect a manual runtime capacity snapshot; no provider scraping")
+    states = [state.value for state in AvailabilityState]
+    c.add_argument("--regular", choices=states, default=AvailabilityState.UNKNOWN.value, help="regular pool state")
+    c.add_argument("--reserve", choices=states, default=AvailabilityState.UNKNOWN.value, help="fallback pool state; availability is runtime-supplied")
+    c.add_argument("--intended-model", help="configured route/model, if known")
+    c.add_argument("--effective-model", help="observed route/model, if known")
+    c.add_argument("--reset", help="observed reset timestamp/text, if known")
+    c.add_argument("--remaining", type=_normalized_fraction, help="optional normalized remaining value in [0, 1]")
 
     ee = sub.add_parser("empirical-ecac", help="Calculate observed spend per accepted change")
     ee.add_argument("--spend", type=float, required=True)
@@ -90,9 +122,24 @@ def main(argv: list[str] | None = None) -> int:
             expected_review_cost=args.review_cost,
             expected_escalation_cost=args.escalation_cost,
             expected_rework_cost=args.rework_cost,
+            capacity_opportunity_cost=args.capacity_opportunity_cost,
             accept_probability=args.accept_prob,
         )
-        print(json.dumps({"expected_attempt_cost": x.expected_attempt_cost, "ecac": x.ecac}, indent=2))
+        payload = {"expected_attempt_cost": x.expected_attempt_cost, "ecac": x.ecac}
+        if x.capacity_opportunity_cost:
+            payload["capacity_opportunity_cost"] = x.capacity_opportunity_cost
+        print(json.dumps(payload, indent=2))
+        return 0
+    if args.cmd == "capacity":
+        snapshot = CapacitySnapshot(
+            regular=AvailabilityState(args.regular),
+            reserve=AvailabilityState(args.reserve),
+            intended_model=args.intended_model,
+            effective_model=args.effective_model,
+            reset=args.reset,
+            remaining=args.remaining,
+        )
+        print(json.dumps(snapshot.to_dict(), indent=2, sort_keys=True))
         return 0
     if args.cmd == "empirical-ecac":
         print(f"{empirical_ecac(args.spend, args.accepted):.6f}")

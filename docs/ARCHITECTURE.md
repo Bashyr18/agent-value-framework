@@ -7,7 +7,7 @@ AVF separates policy from implementation.
 ```text
 CONTROL PLANE (repository-owned)
   project invariants
-  risk rules
+  risk and capacity rules
   model-role profile
   skill governance
   quality gates
@@ -16,6 +16,7 @@ CONTROL PLANE (repository-owned)
 
 EXECUTION PLANE (coding-agent runtime)
   root/orchestrator
+  runtime capacity evidence
   workers
   specialist reviewers
   tools
@@ -26,26 +27,24 @@ Changing a model, account, or provider should not require redesigning the contro
 
 ## Stable root pattern
 
-The default architecture keeps one capable root model stable through the normal task lifecycle. Other models are bounded children or advisers rather than repeated replacements of the root conversation.
+The default architecture keeps one capable root model stable through the normal task lifecycle. Other models are bounded children or advisers rather than repeated replacements of the root conversation. Capacity and entitlement are checked before price optimization.
 
 ```text
-                      stable orchestrator
-                             │
-                 ┌───────────┼───────────┐
-                 │           │           │
-              scout       worker      reviewer
-                 │           │           │
-                 └──── structured handoff┘
-                             │
-                       orchestrator
-                             │
-                    unresolved high risk?
-                             │
-                          adviser
-                             │
-                       orchestrator
-                             │
-                      project gates
+developer/agent → AVF interface → stable orchestrator
+                         ↑       ↑       ↑       ↑
+                 profile/price capacity skills task-state
+                         │       │       │       │
+                         └───────┴───────┴───────┘
+                                  │
+                         bounded worker → repository
+                                               │
+                                         deterministic gates
+                                           │ pass → accepted
+                                           └ fail/uncertain → review/rescue
+                                                               │
+                                                               └→ orchestrator
+
+provider adapter → runtime observations → capacity/route verification
 ```
 
 Benefits:
@@ -54,7 +53,8 @@ Benefits:
 - fewer model-switch continuity failures;
 - cheaper implementation volume;
 - explicit escalation;
-- easier telemetry attribution.
+- easier telemetry attribution;
+- unavailable or unentitled routes are removed before economic comparison.
 
 ## Worker contract
 
@@ -85,12 +85,13 @@ This is semantic compression: expensive reasoning is converted into an executabl
 
 ## Quality architecture
 
-Use four layers:
+Use five layers:
 
-1. **Decomposition** — remove ambiguity before cheap execution.
-2. **Deterministic gates** — tests, typecheck, lint, build, static analysis, schema checks.
-3. **Risk-based review** — only for properties tests do not adequately establish.
-4. **Escalation** — strong reasoning when evidence shows the cheap path is insufficient.
+1. **Feasibility** — check entitlement, capacity, capabilities, policy and the quality floor.
+2. **Decomposition** — remove ambiguity before cheap execution.
+3. **Deterministic gates** — tests, typecheck, lint, build, static analysis, schema checks.
+4. **Risk-based review** — only for properties tests do not adequately establish.
+5. **Escalation** — strong reasoning when evidence shows the cheap path is insufficient.
 
 ## Parallelism
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 
 class EconomicsError(ValueError):
@@ -46,9 +47,12 @@ class AttemptEconomics:
     expected_escalation_cost: float = 0.0
     expected_rework_cost: float = 0.0
     accept_probability: float = 1.0
+    capacity_opportunity_cost: float = 0.0
 
     @property
     def expected_attempt_cost(self) -> float:
+        if not isfinite(self.capacity_opportunity_cost) or self.capacity_opportunity_cost < 0:
+            raise EconomicsError("capacity_opportunity_cost must be finite and non-negative")
         return sum(
             (
                 self.base_cost,
@@ -57,6 +61,7 @@ class AttemptEconomics:
                 self.expected_review_cost,
                 self.expected_escalation_cost,
                 self.expected_rework_cost,
+                self.capacity_opportunity_cost,
             )
         )
 

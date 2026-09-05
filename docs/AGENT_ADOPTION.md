@@ -8,6 +8,8 @@ Integrate Agent Value Framework principles into a target repository while preser
 
 The objective is **minimum expected direct spend per accepted production-quality change**, subject to the repository's existing quality, safety, domain and release requirements.
 
+Before comparing prices, remove routes that are not entitled, available, capable, policy-allowed or above the quality floor. If capacity evidence is unknown, keep it unknown.
+
 ## Mandatory sequence
 
 ### 1. Read only first
@@ -51,6 +53,7 @@ FILES_TO_LEAVE_UNCHANGED
 RISK_CLASSES
 QUALITY_GATES
 ROUTING_PROFILE
+CAPACITY_AND_ENTITLEMENT_POLICY
 SKILL_GOVERNANCE
 STATE_AND_COMPACTION_PLAN
 ACCOUNT_PORTABILITY_GAPS
@@ -64,6 +67,8 @@ Prefer one explicit repo-local AVF task skill and one workflow document over man
 ### 5. Verify runtime claims
 
 Do not claim a model route works solely because a config file names that model. Where the agent host exposes the effective model, perform a harmless runtime probe. Report unavailable or unverified capabilities explicitly.
+
+For a model or quota transition, distinguish intended from effective routing. An effective-model mismatch is not proof of a provider reserve mode. Checkpoint and reclassify remaining work before continuing under constrained capacity.
 
 ### 6. Preserve project quality
 

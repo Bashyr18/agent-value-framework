@@ -12,6 +12,19 @@ Use a small task-state record. Store it in the project's existing issue/evidence
 
 Recommended fields are in `templates/state/task-state.md`.
 
+For v0.2 capacity transitions, add only the route facts needed to resume safely:
+
+```text
+EXECUTION_MODE
+INTENDED_ROUTE
+EFFECTIVE_ROUTE
+CAPACITY_CONSTRAINTS
+TRANSITION_REASON
+FALLBACK_SAFETY
+```
+
+These fields record intent and observed evidence separately. Unknown capacity, entitlement, remaining allowance or transition reason stays unknown; do not infer Reserve from an effective model name.
+
 ## Rehydration protocol
 
 After automatic/manual compaction, model switch, resumed session or fresh account:
@@ -21,10 +34,13 @@ After automatic/manual compaction, model switch, resumed session or fresh accoun
 3. inspect current diff for owned files;
 4. reload relevant project instructions/ADRs only as needed;
 5. inspect last validation evidence;
-6. reconcile inconsistencies before editing;
-7. continue from `NEXT_CONCRETE_ACTION`.
+6. reconcile capacity and intended/effective route mismatches;
+7. reclassify remaining work before editing;
+8. continue from `NEXT_CONCRETE_ACTION`.
 
 Repository state wins over a stale capsule. Update the capsule when reconciliation changes the truth.
+
+When regular capacity returns, checkpoint and reconcile first. Do not discard valid fallback work or change an atomic operation's route mid-flight merely because a stronger route is available again.
 
 ## Codex lifecycle support
 

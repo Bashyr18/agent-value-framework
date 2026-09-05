@@ -17,7 +17,8 @@ project/
 │           └── agents/openai.yaml
 ├── .avf/
 │   ├── policy.toml
-│   └── model-profile.toml
+│   ├── model-profile.toml
+│   └── capacity-policy.toml
 └── provider-specific adapter files
 ```
 
@@ -40,3 +41,5 @@ timestamp, task_class, risk_band, route, spend, retries, accepted
 ```
 
 Public model benchmarks become less important as your own accepted-change history grows.
+
+Add a small capacity policy beside the model profile. It should define unknown-entitlement handling, checkpoint-on-fallback, reserve permissions and pause rules. It must not claim that a particular account has reserve capacity.

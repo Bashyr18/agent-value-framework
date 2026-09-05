@@ -26,15 +26,20 @@ Coding-agent spend is often optimized incorrectly:
 - user-level config makes the workflow change when an account or machine changes;
 - installed skills silently inject competing instructions.
 
-AVF separates five concerns:
+AVF separates these concerns:
 
 ```text
 MODEL        provides intelligence
 SKILL        provides methodology
 ORCHESTRATOR decides routing and escalation
+CAPACITY     represents scarce availability
+ENTITLEMENT  constrains feasible routes
+RUNTIME      supplies observed execution evidence
 REPOSITORY   provides durable state and policy
 TESTS/GATES  provide evidence of correctness
 ```
+
+Price is considered only after entitlement, capacity, required capabilities, project policy and the quality floor make a route feasible. Unknown runtime facts stay unknown.
 
 ## The money-first reference architecture
 
@@ -49,6 +54,8 @@ Critical technical adviser:GPT-6 Astra / high
 ```
 
 This is a **profile**, not the framework. Replace the model names when pricing, capabilities, or your own evals change.
+
+The OpenAI profile also documents Luna Reserve as a provider-specific fallback capacity example. It never stores account entitlement or assumes that an effective Luna model proves Reserve activation.
 
 ## The key metric: ECAC
 
@@ -65,6 +72,15 @@ ECAC = $0.50 / 0.90 = $0.556 per accepted change
 ```
 
 The more expensive call is the better value.
+
+v0.2 can include a project-assigned scarcity term for finite capacity:
+
+```text
+C_capacity_opportunity = Σ(shadow_price × expected_use)
+ECAC_capacity = (attempt cost + capacity opportunity cost) / P(accepted)
+```
+
+An included allowance can have opportunity cost even when its immediate incremental cash charge is not represented as API billing. Set the shadow price to zero when that is the project's deliberate policy; do not invent provider values.
 
 In production, use observed telemetry:
 
@@ -196,6 +212,12 @@ Calculate expected cost per accepted change:
 avf ecac --base-cost 0.30 --verification-cost 0.05 --accept-prob 0.75
 ```
 
+Inspect a manually supplied capacity snapshot with:
+
+    avf capacity --regular exhausted --reserve available --intended-model gpt-5.6-sol --effective-model gpt-5.6-luna
+
+This reports RESERVE plus any intended/effective route mismatch. It does not scrape quota or infer Reserve from a model name.
+
 Find when an expensive route becomes economically justified:
 
 ```bash
@@ -227,6 +249,9 @@ AVF does not:
 - depend on one permanent model generation;
 - parse private chain-of-thought;
 - make native compaction a source of truth;
+- treat unknown entitlement or capacity as available;
+- lower the quality floor because a fallback route remains;
+- claim that an effective model change proves a particular reserve mode;
 - auto-deploy or perform external writes simply because an agent can;
 - overwrite mature repository governance during installation.
 
@@ -244,6 +269,7 @@ agent-value-framework/
 
 ## Documentation map
 
+- [docs/CAPACITY.md](docs/CAPACITY.md) — capacity, feasibility and fallback safety
 - [`docs/PRINCIPLES.md`](docs/PRINCIPLES.md) — non-negotiable design principles
 - [`docs/MATH.md`](docs/MATH.md) — ECAC, break-even and routing math
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — full system architecture
@@ -258,7 +284,7 @@ agent-value-framework/
 
 ## Status
 
-`0.1.0` is an architecture-complete alpha: the economic model, repository audit CLI, risk scoring, templates, documentation, and tests are present. Provider adapters should be treated as versioned integrations and validated against the installed coding-agent runtime before activation.
+`0.2.0` is prepared as an unreleased capacity-aware update: generic capacity states, route feasibility, fallback safety, opportunity-cost economics, transition guidance and a Codex/Luna Reserve adapter note are present. Provider adapters still require validation against the installed runtime before activation.
 
 ## License
 

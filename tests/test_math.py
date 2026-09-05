@@ -15,6 +15,20 @@ def test_ecac_stationary():
     assert math.isclose(e.ecac, 0.5)
 
 
+def test_capacity_cost_is_optional_and_additive():
+    old = AttemptEconomics(0.30, 0.05, 0.0, 0.0, 0.0, 0.0, 0.70)
+    unchanged = AttemptEconomics(base_cost=0.30, verification_cost=0.05, accept_probability=0.70, capacity_opportunity_cost=0.0)
+    scarce = AttemptEconomics(base_cost=0.30, verification_cost=0.05, accept_probability=0.70, capacity_opportunity_cost=0.20)
+    assert old.ecac == unchanged.ecac
+    assert math.isclose(scarce.expected_attempt_cost, 0.55)
+    assert scarce.ecac > unchanged.ecac
+
+
+def test_negative_capacity_cost_is_rejected():
+    with pytest.raises(ValueError):
+        AttemptEconomics(base_cost=0.30, capacity_opportunity_cost=-0.01).expected_attempt_cost
+
+
 def test_empirical_ecac():
     assert empirical_ecac(10, 20) == 0.5
 

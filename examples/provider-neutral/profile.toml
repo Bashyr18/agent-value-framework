@@ -9,6 +9,11 @@ default_worker = "worker"
 reviewer = "reviewer"
 premium_adviser = "premium"
 
+[capacity_policy]
+unknown_entitlement = "conservative"
+checkpoint_on_fallback = true
+silent_model_downgrade = false
+
 [models.root]
 model = "YOUR_BALANCED_REASONING_MODEL"
 effort = "medium"
