@@ -9,6 +9,7 @@
 - Quota-transition checkpointing, reclassification and Codex/Luna Reserve guidance.
 - Capacity-aware architecture documentation and deterministic tests.
 - Trace-enabled interactive architecture walkthrough with four guided views.
+- Autoplaying README preview for the guided walkthrough.
 
 ### Changed
 

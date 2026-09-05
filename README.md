@@ -4,6 +4,10 @@
 
 AVF is an open-source, repository-native framework for cost-aware coding-agent orchestration. It treats model selection as an engineering economics problem rather than a leaderboard problem.
 
+[![Autoplay walkthrough of the capacity-aware control plane](docs/agent-value-framework-architecture.gif)](docs/agent-value-framework-architecture.html)
+
+The loop above is a quick tour. Open the [interactive walkthrough](docs/agent-value-framework-architecture.html) for the full trace-enabled diagram and guided views.
+
 The core objective is:
 
 ```text
