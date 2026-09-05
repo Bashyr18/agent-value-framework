@@ -62,7 +62,7 @@ RUNTIME_ASSUMPTIONS_TO_VERIFY
 
 ### 4. Apply only the smallest coherent change
 
-Prefer one explicit repo-local AVF task skill and one workflow document over many new skills. Keep root instructions concise.
+Prefer one explicit repo-local AVF `value` skill and one workflow document over many new skills. Keep root instructions concise.
 
 ### 5. Verify runtime claims
 

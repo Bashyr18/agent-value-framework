@@ -39,5 +39,5 @@ def doctor(path: str | Path) -> list[Check]:
     checks.append(Check("codex", "ok" if codex_version else "info", codex_version or "not installed on PATH"))
     checks.append(Check("project-config", "ok" if (root / ".codex/config.toml").exists() else "info", "present" if (root / ".codex/config.toml").exists() else "no repository Codex config"))
     checks.append(Check("agents", "ok" if (root / "AGENTS.md").exists() else "info", "AGENTS.md present" if (root / "AGENTS.md").exists() else "no AGENTS.md"))
-    checks.append(Check("avf-skill", "ok" if (root / ".agents/skills/avf-task/SKILL.md").exists() else "info", "installed" if (root / ".agents/skills/avf-task/SKILL.md").exists() else "not installed"))
+    checks.append(Check("avf-skill", "ok" if (root / ".agents/skills/value/SKILL.md").exists() else "info", "installed" if (root / ".agents/skills/value/SKILL.md").exists() else "not installed"))
     return checks

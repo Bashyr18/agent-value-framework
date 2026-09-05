@@ -123,7 +123,7 @@ def audit_repository(path: str | Path) -> RepoAudit:
         stacks.append("dotnet")
 
     collisions: list[str] = []
-    for candidate in ["AGENTS.md", ".codex/config.toml", "docs/agents/agent-value-workflow.md", ".agents/skills/avf-task/SKILL.md"]:
+    for candidate in ["AGENTS.md", ".codex/config.toml", "docs/agents/agent-value-workflow.md", ".agents/skills/value/SKILL.md"]:
         if candidate in rels or (root / candidate).exists():
             collisions.append(candidate)
     if (root / "bin").exists():

@@ -50,7 +50,7 @@ RED does not necessarily mean uninstall. It means "never silently invoke."
 
 Codex repo-local skills can live under `.agents/skills`. Current Codex supports `allow_implicit_invocation: false` in `agents/openai.yaml`, making a skill explicit-only while still available as `$skill-name`.
 
-AVF's own project task skill is explicit-only by design. Starting an AVF workflow should be a deliberate user/root action, not something inferred from every coding prompt.
+AVF's own `value` skill is explicit-only by design. Starting an AVF workflow should be a deliberate user/root action, not something inferred from every coding prompt. Invoke it with `$value`.
 
 ## Instruction precedence
 

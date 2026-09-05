@@ -32,5 +32,5 @@
 - Risk scoring scaffold.
 - Codex adapter documentation and templates.
 - Context compaction recovery pattern.
-- Repo-local explicit AVF task skill.
+- Repo-local explicit AVF `value` skill.
 - OpenAI/Codex money-first dated reference profile.

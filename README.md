@@ -68,6 +68,16 @@ avf doctor .
 
 Codex is the execution runtime. AVF supplies routing rules and checks; it does not call the OpenAI API, change Codex settings or read private quota.
 
+### Optional Codex skill
+
+Install the reusable skill with:
+
+```text
+$skill-installer https://github.com/Bashyr18/agent-value-framework/tree/main/templates/common/.agents/skills/value
+```
+
+Invoke it in Codex with `$value`. Codex's shareable skill syntax is `$name`; `/value` is not supported for repo-distributed skills.
+
 The dated example profile in [`examples/openai-codex-money-first/`](examples/openai-codex-money-first/) uses:
 
 ```text

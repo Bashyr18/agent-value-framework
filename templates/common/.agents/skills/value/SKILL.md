@@ -1,6 +1,6 @@
 ---
-name: avf-task
-description: Start the repository's cost-aware coding workflow for a substantial engineering task. Use explicitly when the user wants AVF routing, bounded delegation, project-native validation, and context-safe state handling. Do not use for trivial questions or tiny edits where delegation overhead would exceed the work.
+name: value
+description: Start the repository's Agent Value Framework workflow for a substantial engineering task. Use explicitly when the user wants AVF routing, bounded delegation, project-native validation, and context-safe state handling. Do not use for trivial questions or tiny edits where delegation overhead would exceed the work.
 ---
 
 Read the repository's agent-value workflow document before routing work.

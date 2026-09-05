@@ -44,7 +44,7 @@ policy:
   allow_implicit_invocation: false
 ```
 
-The AVF task skill uses this setting.
+The AVF `value` skill uses this setting.
 
 ## Hooks
 

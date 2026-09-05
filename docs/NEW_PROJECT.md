@@ -12,7 +12,7 @@ project/
 │       └── agent-value-workflow.md
 ├── .agents/
 │   └── skills/
-│       └── avf-task/
+│       └── value/
 │           ├── SKILL.md
 │           └── agents/openai.yaml
 ├── .avf/

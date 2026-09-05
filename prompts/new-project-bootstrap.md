@@ -8,7 +8,7 @@ Before building product features:
 
 1. establish concise root project instructions;
 2. create a detailed agent-value workflow doc;
-3. create one explicit repo-local AVF task skill;
+3. create one explicit repo-local `value` skill;
 4. define a provider/model profile without embedding credentials;
 5. establish a fast deterministic validation path;
 6. define risk hard-rules for security, persistence, external side effects and irreversible changes;

@@ -53,7 +53,7 @@ Typical mature-repo result:
 ```text
 small AGENTS.md amendment                optional
 project workflow doc                     recommended
-repo-local explicit AVF task skill       recommended
+repo-local explicit AVF `value` skill    recommended
 .codex/config.toml merge                 Codex adapter only
 narrow custom agents                     optional
 small runtime/compaction hooks            optional
