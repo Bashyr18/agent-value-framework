@@ -1,6 +1,6 @@
-# Agent Value Framework (AVF) for OpenAI Codex
+# Agent Value Framework (AVF) for ChatGPT/Codex
 
-Cost-aware routing for coding work in OpenAI Codex and OpenAI models.
+Cost-aware routing for coding work in Codex using OpenAI models.
 
 AVF checks whether a route is allowed and capable, then chooses the lowest expected cost per accepted change.
 
@@ -64,7 +64,7 @@ avf doctor .
 
 `audit` is read-only. `doctor` checks prerequisites for an AVF/Codex integration.
 
-## OpenAI Codex setup
+## Codex setup
 
 Codex is the execution runtime. AVF supplies routing rules and checks; it does not call the OpenAI API, change Codex settings or read private quota.
 
